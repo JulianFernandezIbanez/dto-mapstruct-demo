@@ -9,5 +9,9 @@ public record UserResponse(
     long id,
     String name,
     String password,
-    String dob
+    String dob,
+    String status,
+    //Campos de Contact
+    String mob,
+    String emailId
 ) {}

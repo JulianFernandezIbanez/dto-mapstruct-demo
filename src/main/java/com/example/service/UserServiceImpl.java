@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dao.UserDao;
 import com.example.dto.UserResponse;
+import com.example.entity.Contact;
 import com.example.entity.User;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final UserMapper userMapper;
+    private final ContactService contactService;
 
     @Override
     public UserResponse getUserById(long id) {
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
         // Mapeo manual entre la entidad User y el DTO UserResponse
 
         User user = userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found!!!"));
+        Contact contact = contactService.getContactById(id);
 
         /* Mapeo manual
             userResponse = new UserResponse(
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
             DateTimeFormatter.ISO_LOCAL_DATE.format(user.getDateOfBirth())
         );*/
 
-        userResponse = userMapper.mapUserToUserResponse(user);
+        userResponse = userMapper.mapUserAndContactToUserResponse(user, contact);
 
         return userResponse;
 
