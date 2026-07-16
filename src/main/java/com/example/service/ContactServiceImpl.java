@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 import com.example.dao.ContactDao;
@@ -16,8 +18,15 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Contact getContactById(long id) {
 
-        return contactDao.findById(id).get();
+        return contactDao.findById(id).orElseThrow(() -> new RuntimeException("Contact not found!!!"));
         
+    }
+
+    @Override
+    public Set<Contact> getContactsByUserId(long userId) {
+
+        return contactDao.findByUsers_id(userId);
+
     }
 
 }

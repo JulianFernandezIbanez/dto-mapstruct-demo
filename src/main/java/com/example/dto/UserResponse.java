@@ -1,5 +1,7 @@
 package com.example.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 // La siguiente anotacion es para que el proceso de deserializacion solo muestre
@@ -12,6 +14,6 @@ public record UserResponse(
     String dob,
     String status,
     //Campos de Contact
-    String mob,
-    String emailId
+    List<String> mob,
+    List<String> email
 ) {}

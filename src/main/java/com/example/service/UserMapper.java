@@ -1,5 +1,9 @@
 package com.example.service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -47,14 +51,36 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(source = "user.dateOfBirth", target = "dob")
     @Mapping(source = "user.status", target = "status", defaultValue = "INACTIVE")
-    @Mapping(source = "contact.mobileNumber", target = "mob", qualifiedByName = "maskPhone")
-    @Mapping(source = "contact.email", target = "emailId")
-    UserResponse mapUserAndContactToUserResponse(User user, Contact contact);
+    @Mapping(expression = "java(extractMobiles(user.getContacts()))", target = "mob")
+    @Mapping(expression = "java(extractEmails(user.getContacts()))", target = "email")
+    UserResponse mapUserAndContactToUserResponse(User user);
 
     //Mapear de manera personalizada (En este caso mostrar ***** en vez del numero de tlf)
 
-    @Named("maskPhone")
+    default List<String> extractMobiles(Set<Contact> contacts) {
+        if (contacts == null || contacts.isEmpty()) {
+            return null; // Retornar null hará que @JsonInclude lo remueva del JSON
+        }
+        return contacts.stream()
+                .map(Contact::getMobileNumber)
+                .map(UserMapper::getPhoneNumber) // Aplicamos la ofuscación
+                .collect(Collectors.toList());
+    }
+
+    default List<String> extractEmails(Set<Contact> contacts) {
+        if (contacts == null || contacts.isEmpty()) {
+            return null; // Retornar null hará que @JsonInclude lo remueva del JSON
+        }
+        return contacts.stream()
+                .map(Contact::getEmail)
+                .filter(email -> email != null)
+                .collect(Collectors.toList());
+    }
+
+
     static String getPhoneNumber(String phone) {
+        
+        if (phone == null) return null;
         return phone.replaceAll("\\d(?=\\d{3})", "*");
     }
 

@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.Set;
+
 //import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Service;
@@ -27,7 +29,11 @@ public class UserServiceImpl implements UserService {
         // Mapeo manual entre la entidad User y el DTO UserResponse
 
         User user = userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found!!!"));
-        Contact contact = contactService.getContactById(id);
+        Set<Contact> userContacts = contactService.getContactsByUserId(id);
+
+        Contact contact = userContacts.stream()
+            .findFirst()
+            .orElse(new Contact());
 
         /* Mapeo manual
             userResponse = new UserResponse(
@@ -37,7 +43,7 @@ public class UserServiceImpl implements UserService {
             DateTimeFormatter.ISO_LOCAL_DATE.format(user.getDateOfBirth())
         );*/
 
-        userResponse = userMapper.mapUserAndContactToUserResponse(user, contact);
+        userResponse = userMapper.mapUserAndContactToUserResponse(user);
 
         return userResponse;
 

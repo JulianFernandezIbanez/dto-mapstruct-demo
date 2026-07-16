@@ -45,9 +45,18 @@ public class User implements Serializable {
 	@Builder.Default
 	@ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "user-contacts", joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "contact_id")})
-	private final Set<Contact> contacts = new HashSet<>();
+	private Set<Contact> contacts = new HashSet<>();
 
 	public void addContact(Contact contact){
+
+		if (this.contacts == null) {
+            this.contacts = new HashSet<>();
+        }
+
+        if (contact.getUsers() == null) {
+            contact.setUsers(new HashSet<>());
+        }
+
 
 		this.contacts.add(contact);
 		contact.getUsers().add(this);
