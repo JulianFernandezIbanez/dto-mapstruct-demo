@@ -2,6 +2,7 @@ package com.example.service;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import com.example.dto.UserResponse;
 import com.example.entity.Contact;
@@ -46,8 +47,15 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(source = "user.dateOfBirth", target = "dob")
     @Mapping(source = "user.status", target = "status", defaultValue = "INACTIVE")
-    @Mapping(source = "contact.mobileNumber", target = "mob")
+    @Mapping(source = "contact.mobileNumber", target = "mob", qualifiedByName = "maskPhone")
     @Mapping(source = "contact.email", target = "emailId")
     UserResponse mapUserAndContactToUserResponse(User user, Contact contact);
+
+    //Mapear de manera personalizada (En este caso mostrar ***** en vez del numero de tlf)
+
+    @Named("maskPhone")
+    static String getPhoneNumber(String phone) {
+        return phone.replaceAll("\\d(?=\\d{3})", "*");
+    }
 
 }
