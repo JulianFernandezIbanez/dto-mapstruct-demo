@@ -42,20 +42,20 @@ public class User implements Serializable {
 	private LocalDate dateOfBirth;
 	private String status;
 
-	@Builder.Default
+	//@Builder.Default
 	@ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "user-contacts", joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "contact_id")})
-	private Set<Contact> contacts = new HashSet<>();
+	private final Set<Contact> contacts = new HashSet<>();
 
 	public void addContact(Contact contact){
 
-		if (this.contacts == null) {
+		/*if (this.contacts == null) {
             this.contacts = new HashSet<>();
         }
 
         if (contact.getUsers() == null) {
             contact.setUsers(new HashSet<>());
-        }
+        }*/
 
 
 		this.contacts.add(contact);

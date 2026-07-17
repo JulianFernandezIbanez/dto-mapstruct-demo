@@ -59,24 +59,23 @@ public interface UserMapper {
 
     default List<String> extractMobiles(Set<Contact> contacts) {
         if (contacts == null || contacts.isEmpty()) {
-            return null; // Retornar null hará que @JsonInclude lo remueva del JSON
+            return null;
         }
         return contacts.stream()
                 .map(Contact::getMobileNumber)
-                .map(UserMapper::getPhoneNumber) // Aplicamos la ofuscación
+                .map(UserMapper::getPhoneNumber)
                 .collect(Collectors.toList());
     }
 
     default List<String> extractEmails(Set<Contact> contacts) {
         if (contacts == null || contacts.isEmpty()) {
-            return null; // Retornar null hará que @JsonInclude lo remueva del JSON
+            return null;
         }
         return contacts.stream()
                 .map(Contact::getEmail)
                 .filter(email -> email != null)
                 .collect(Collectors.toList());
     }
-
 
     static String getPhoneNumber(String phone) {
         

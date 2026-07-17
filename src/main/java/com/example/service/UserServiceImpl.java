@@ -10,6 +10,7 @@ import com.example.dao.UserDao;
 import com.example.dto.UserResponse;
 import com.example.entity.Contact;
 import com.example.entity.User;
+import com.example.exception.ResourceNotfoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +29,12 @@ public class UserServiceImpl implements UserService {
 
         // Mapeo manual entre la entidad User y el DTO UserResponse
 
-        User user = userDao.findById(id).orElseThrow(() -> new RuntimeException("User not found!!!"));
-        Set<Contact> userContacts = contactService.getContactsByUserId(id);
+        User user = userDao.findById(id).orElseThrow(() -> new ResourceNotfoundException("User not found!!!"));
+        //Set<Contact> userContacts = contactService.getContactsByUserId(id);
 
-        Contact contact = userContacts.stream()
+        /*Contact contact = userContacts.stream()
             .findFirst()
-            .orElse(new Contact());
+            .orElse(new Contact());*/
 
         /* Mapeo manual
             userResponse = new UserResponse(

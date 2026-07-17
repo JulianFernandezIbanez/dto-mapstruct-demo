@@ -45,9 +45,9 @@ public class Contact implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @Builder.Default
+    //@Builder.Default
     @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "contacts")
     @JsonIgnore
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
     
 }
